@@ -5,15 +5,12 @@ import org.apache.http.message.BasicNameValuePair;
 
 import java.util.ArrayList;
 
+import rsoni.Model.Commodity;
 import rsoni.Utils.DataResult;
 import rsoni.Utils.Task;
-import rsoni.kisaanApp.App;
-import rsoni.modal.AppUser;
-import rsoni.modal.BuyNode;
-import rsoni.modal.CommodityPrice;
-import rsoni.modal.NewsItem;
-import rsoni.modal.SaleNode;
-import rsoni.modal.SearchFilter;
+import rsoni.Model.AppUser;
+import rsoni.Model.NewsItem;
+import rsoni.justagriagro.manage.App;
 
 
 public class NetworkService {
@@ -33,21 +30,12 @@ public class NetworkService {
 			param.add(new BasicNameValuePair("mobile", appUser.mobile));
 			param.add(new BasicNameValuePair("pass", appUser.password));
 			return getResponce(url,Task.post,task,param);
-		} else if (task == Task.mobile_register){
-			url+="auth/sign-up";
-			param.add(new BasicNameValuePair("opt", "sign-up"));
-			param.add(new BasicNameValuePair("mobile", appUser.mobile));
-			param.add(new BasicNameValuePair("pass", appUser.password));
-			param.add(new BasicNameValuePair("email", appUser.email));
-			param.add(new BasicNameValuePair("usercat", ""+appUser.userCategory));
-			System.out.println("333333");
-			return getResponce(url,Task.post,task,param);
-		} else if (task == Task.email_login){
+		}else if (task == Task.email_login){
 			url+="auth";
 			param.add(new BasicNameValuePair("email", appUser.email));
 			param.add(new BasicNameValuePair("password", appUser.password));
 			return getResponce(url,Task.post,task,param);
-		} else if (task == Task.fb_login){
+		}else if (task == Task.fb_login){
 			url+="accounts";
 			param.add(new BasicNameValuePair("email", appUser.email));
 
@@ -55,13 +43,6 @@ public class NetworkService {
 		}else if (task == Task.g_login){
 			url+="accounts/forgot-password";
 			param.add(new BasicNameValuePair("email", appUser.email));
-			return getResponce(url,Task.post,task,param);
-		}else if (task == Task.email_register){
-			url+="accounts/register";
-			param.add(new BasicNameValuePair("username", appUser.username));
-			param.add(new BasicNameValuePair("email", appUser.email));
-			param.add(new BasicNameValuePair("password1", appUser.password));
-			param.add(new BasicNameValuePair("password2", appUser.password));
 			return getResponce(url,Task.post,task,param);
 		}else if (task == Task.forgot_pass){
 			url+="accounts/forgot-password";
@@ -73,162 +54,36 @@ public class NetworkService {
 
 	}
 
-	public DataResult Search(Task task, SearchFilter search) {
-		String url = App.ServiceUrl;
-		String json = "";
-		ArrayList<NameValuePair> param = new ArrayList<NameValuePair>();
-		switch (task) {
-		case buyer_search:
-			url+="buy/search-buy-node";
-			param.add(new BasicNameValuePair("user_id", ""+App.appUser.id));
-			param.add(new BasicNameValuePair("state_id", ""+search.state_id));
-			param.add(new BasicNameValuePair("district_id", ""+search.district_id));
-			param.add(new BasicNameValuePair("business_id", ""+search.business_id));
-			return getResponce(url, Task.post, task, param);
-			//break;
-		case seller_search:
-			url+="sale/search-sale-node";
-			param.add(new BasicNameValuePair("user_id", ""+App.appUser.id));
-			param.add(new BasicNameValuePair("state_id", ""+search.state_id));
-			param.add(new BasicNameValuePair("district_id", ""+search.district_id));
-			param.add(new BasicNameValuePair("business_id", ""+search.business_id));
-			return getResponce(url, Task.post, task, param);
-			//break;
-		default:
-			break;
-		}
-
-	    return null;
-
-	}
-
-	public DataResult SaleNode(Task task,SaleNode saleNode) {
+	public DataResult Commodity(Task task,Commodity commodity) {
 		System.out.println("SaleNode()...");
 		String url = App.ServiceUrl;
 		ArrayList<NameValuePair> param = new ArrayList<NameValuePair>();
-		if (task == Task.get_sale_node) { //
-			url+="sale/get-sale-node";
-			param.add(new BasicNameValuePair("opt", "get-sale-node"));
-			param.add(new BasicNameValuePair("id", ""+saleNode.id));
-			return getResponce(url,Task.post,task,param);
-		}else if (task == Task.list_sale_node){
-			url+="sale/list-sale-node";
-			param.add(new BasicNameValuePair("opt", "list-sale-node"));
-			param.add(new BasicNameValuePair("user_id", ""+App.appUser.id));
-			return getResponce(url,Task.post,task,param);
-		}else if (task == Task.add_sale_node){
-			url+="sale/add-sale-node";
-			param.add(new BasicNameValuePair("opt", "add-sale-node"));
-			param.add(new BasicNameValuePair("user_id", ""+saleNode.user_id));
-			param.add(new BasicNameValuePair("state_id", ""+saleNode.state_id));
-			param.add(new BasicNameValuePair("district_id", ""+saleNode.district_id));
-			param.add(new BasicNameValuePair("market_id", ""+saleNode.market_id));
-			param.add(new BasicNameValuePair("usercat", ""+saleNode.usercat));
-			param.add(new BasicNameValuePair("commodity_cat_id", ""+saleNode.commodity_cat_id));
-			param.add(new BasicNameValuePair("commodity_id", ""+saleNode.commodity_id));
-			param.add(new BasicNameValuePair("business_id", ""+saleNode.business_id));
-			param.add(new BasicNameValuePair("sale_note", saleNode.sale_note));
-
-			return getResponce(url,Task.post,task,param);
-		}else if (task == Task.update_sale_node){
-			url+="sale/update-sale-node";
-			param.add(new BasicNameValuePair("opt", "update-sale-node"));
-			param.add(new BasicNameValuePair("id", ""+saleNode.id));
-			param.add(new BasicNameValuePair("note_date", ""+saleNode.note_date));
-			param.add(new BasicNameValuePair("sale_note", saleNode.sale_note));
-			return getResponce(url,Task.post,task,param);
-		}else if (task == Task.delete_sale_node){
-			url+="sale/delete-sale-node";
-			param.add(new BasicNameValuePair("opt", "delete-sale-node"));
-			param.add(new BasicNameValuePair("id", ""+saleNode.id));
-			return getResponce(url,Task.post,task,param);
-		}
-		return null;
-	}
-
-	public DataResult CommodityPrice(Task task,CommodityPrice commodityPrice) {
-		System.out.println("SaleNode()...");
-		String url = App.ServiceUrl;
-		ArrayList<NameValuePair> param = new ArrayList<NameValuePair>();
-		if (task == Task.list_commodity_price){
+		if (task == Task.list_commodity){
 			url+="commodity/list-commodity-price";
 			param.add(new BasicNameValuePair("opt", "list-commodity-price"));
 			param.add(new BasicNameValuePair("user_id", ""+App.appUser.id));
 			return getResponce(url,Task.post,task,param);
-		}else if (task == Task.search_commodity_price){
+		}else if (task == Task.search_commodity){
 			url+="commodity/search-commodity-price";
 			param.add(new BasicNameValuePair("opt", "search-commodity-price"));
-			param.add(new BasicNameValuePair("market_id", ""+commodityPrice.market_id));
-			param.add(new BasicNameValuePair("commodity_id", ""+commodityPrice.commodity_id));
+			param.add(new BasicNameValuePair("id", ""+commodity.id));
+			param.add(new BasicNameValuePair("commodity_name", ""+commodity.commodity_name));
 			return getResponce(url,Task.post,task,param);
-		}else if (task == Task.add_commodity_price){
+		}else if (task == Task.add_commodity){
 			url+="commodity/add-commodity-price";
 			param.add(new BasicNameValuePair("opt", "add-commodity-price"));
-			param.add(new BasicNameValuePair("user_id", ""+commodityPrice.user_id));
-			param.add(new BasicNameValuePair("state_id", ""+commodityPrice.state_id));
-			param.add(new BasicNameValuePair("district_id", ""+commodityPrice.district_id));
-			param.add(new BasicNameValuePair("market_id", ""+commodityPrice.market_id));
-			param.add(new BasicNameValuePair("commodity_cat_id", ""+commodityPrice.commodity_cat_id));
-			param.add(new BasicNameValuePair("commodity_id", ""+commodityPrice.commodity_id));
-			param.add(new BasicNameValuePair("commodity_name", ""+commodityPrice.commodity_name));
-			param.add(new BasicNameValuePair("price_note", ""+commodityPrice.price_note));
+			param.add(new BasicNameValuePair("id", ""+commodity.id));
+			param.add(new BasicNameValuePair("commodity_name", commodity.commodity_name));
+			param.add(new BasicNameValuePair("commodity_cat_id", ""+commodity.commodity_cat_id));
 			return getResponce(url,Task.post,task,param);
-		}else if (task == Task.update_commodity_price){
+		}else if (task == Task.update_commodity){
 			url+="commodity/update-sale-node";
 			param.add(new BasicNameValuePair("opt", "update-commodity-price"));
-			return getResponce(url,Task.post,task,param);
-		}else if (task == Task.delete_sale_node){
-			url+="commodity/delete-sale-node";
-			param.add(new BasicNameValuePair("opt", "delete-commodity-price"));
-			param.add(new BasicNameValuePair("id", ""+commodityPrice.commodity_id));
 			return getResponce(url,Task.post,task,param);
 		}
 		return null;
 	}
 
-	public DataResult BuyNode(Task task,BuyNode buyNode) {
-		System.out.println("BuyNode()...");
-		String url = App.ServiceUrl;
-		ArrayList<NameValuePair> param = new ArrayList<NameValuePair>();
-		if (task == Task.get_buy_node) { //
-			url+="buy/get-buy-node";
-			param.add(new BasicNameValuePair("opt", "get-buy-node"));
-			param.add(new BasicNameValuePair("id", ""+App.appUser.id));
-			return getResponce(url,Task.post,task,param);
-		}else if (task == Task.list_buy_node){
-			url+="buy/list-buy-node";
-			param.add(new BasicNameValuePair("opt", "list-buy-node"));
-			param.add(new BasicNameValuePair("user_id", ""+App.appUser.id));
-			return getResponce(url,Task.post,task,param);
-		}else if (task == Task.add_buy_node){
-			url+="buy/add-buy-node";
-			param.add(new BasicNameValuePair("opt", "add-buy-node"));
-			param.add(new BasicNameValuePair("user_id", ""+App.appUser.id));
-			param.add(new BasicNameValuePair("state_id", ""+buyNode.state_id));
-			param.add(new BasicNameValuePair("district_id", ""+buyNode.district_id));
-			param.add(new BasicNameValuePair("market_id", ""+buyNode.market_id));
-			param.add(new BasicNameValuePair("usercat", ""+buyNode.usercat));
-			param.add(new BasicNameValuePair("commodity_cat_id", ""+buyNode.commodity_cat_id));
-			param.add(new BasicNameValuePair("commodity_id", ""+buyNode.commodity_id));
-			param.add(new BasicNameValuePair("note_date", ""+buyNode.note_date));
-			param.add(new BasicNameValuePair("business_id", ""+buyNode.business_id));
-			param.add(new BasicNameValuePair("buy_note", buyNode.buy_note));
-			return getResponce(url,Task.post,task,param);
-		}else if (task == Task.update_buy_node){
-			url+="buy/update-buy-node";
-			param.add(new BasicNameValuePair("opt", "update-buy-node"));
-			param.add(new BasicNameValuePair("id", ""+App.appUser.id));
-			param.add(new BasicNameValuePair("note_date", ""+buyNode.note_date));
-			param.add(new BasicNameValuePair("buy_note", buyNode.buy_note));
-			return getResponce(url,Task.post,task,param);
-		}else if (task == Task.delete_buy_node){
-			url+="buy/delete-buy-node";
-			param.add(new BasicNameValuePair("opt", "delete-buy-node"));
-			param.add(new BasicNameValuePair("id", ""+buyNode.id));
-			return getResponce(url,Task.post,task,param);
-		}
-		return null;
-	}
 
 	public DataResult News(Task task,NewsItem newsItem) {
 		System.out.println("News()...");
@@ -317,13 +172,6 @@ public class NetworkService {
 				dataResult = dataParser.UserAuth(json, mode);
 				break;
 
-			case mobile_register:
-			case email_register:
-			case fb_register:
-			case g_register:
-				dataResult = dataParser.UserAuth(json, mode);
-				break;
-
 			case get_profile:
 			case update_profile:
 				dataResult = dataParser.Profile(json, mode);
@@ -333,32 +181,20 @@ public class NetworkService {
 				dataResult = dataParser.UserAuth(json, mode);
 				break;
 
-			case get_sale_node:
-			case list_sale_node:
-			case add_sale_node:
-			case update_sale_node:
-			case delete_sale_node:
-			case seller_search:
-				dataResult = dataParser.SaleNode(json, mode);
+
+			case user_list:
+			case add_user:
+			case update_user:
+				dataResult = dataParser.User(json, mode);
 				break;
 
-			case list_commodity_price:
-			case add_commodity_price:
-			case update_commodity_price:
-			case search_commodity_price:
-			case delete_commodity_price:
-				dataResult = dataParser.CommodityPrice(json, mode);
+			case list_commodity:
+			case add_commodity:
+			case update_commodity:
+			case search_commodity:
+			case delete_commodity:
+				dataResult = dataParser.Commodity(json, mode);
 				break;
-
-			case get_buy_node:
-			case list_buy_node:
-			case add_buy_node:
-			case update_buy_node:
-			case delete_buy_node:
-			case buyer_search:
-				dataResult = dataParser.BuyNode(json, mode);
-				break;
-
 
 			case get_news_details:
 			case news_list_sort:

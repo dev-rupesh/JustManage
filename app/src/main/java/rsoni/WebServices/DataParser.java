@@ -3,15 +3,13 @@ package rsoni.WebServices;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import rsoni.Model.AppUser;
+import rsoni.Model.Commodity;
+import rsoni.Model.NewsItem;
+import rsoni.Model.User;
+import rsoni.Model.UserProfile;
 import rsoni.Utils.DataResult;
 import rsoni.Utils.Task;
-import rsoni.modal.AppUser;
-import rsoni.modal.BuyNode;
-import rsoni.modal.CommodityPrice;
-import rsoni.modal.NewsItem;
-import rsoni.modal.SaleNode;
-import rsoni.modal.SearchResult;
-import rsoni.modal.UserProfile;
 
 
 public class DataParser {
@@ -98,86 +96,6 @@ public class DataParser {
 		}
 		return jsonResponse;
 	}
-	public DataResult Search(String json, Task mode) {
-		JSONObject response = null;
-		DataResult result = new DataResult();
-		response = StartForSuccessBoolean(json, result);
-		if (result.Status ) {
-			try {				
-				switch (mode) {	
-					case buyer_or_seller_search:
-						result.Data = SearchResult.getBuyerSerch(response.getJSONObject("data"));
-						break;
-					case buyer_search:
-						result.Data = SearchResult.getBuyerSerch(response.getJSONObject("data"));
-						break;
-					case seller_search:
-						result.Data = SearchResult.getSellerSerch(response.getJSONObject("data"));
-						break;
-					case crop_search:
-						result.Data = SearchResult.getCropSerch(response.getJSONObject("data"));
-						break;
-					default:
-					break;
-				}
-			} catch (JSONException e) {
-				result.Status = false;
-				result.msg = "" + e;
-				e.printStackTrace();
-			}
-		}
-		return result;
-	}
-	
-	
-	
-	/*public DataResult SearchJson(String json, Task mode) {
-		JSONObject response = null;
-		DataResult result = new DataResult();
-		if(mode == Task.cuisines_search_json || mode == Task.cuisines_search){
-			try {
-				response = new JSONObject(json);
-				result.Status = true;
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}else{
-			response = StartForSuccessBoolean(json, result);
-		}
-		
-		if (result.Status ) {
-			try {				
-				switch (mode) {	
-				case categories_search_json:
-					result.Data = response.getJSONArray("categories");
-					break;
-				case cuisines_search_json:
-					result.Data = response.getJSONArray("cuisines");
-					break;
-				case areas_search_json:
-					result.Data = response.getJSONArray("areas");
-					break;
-				case features_search_json:
-					result.Data = response.getJSONArray("filters");
-					break;
-				case filters_search_json:
-					result.Data = response.getJSONArray("filters");
-					break;
-				case restaurants_search_json:
-					result.Data = response.getJSONArray("restaurants");
-					break;
-				default:
-					break;
-				}
-			} catch (JSONException e) {
-				result.Status = false;
-				result.msg = "" + e;
-				e.printStackTrace();
-			}
-		}
-		return result;
-	}*/
 
 
 	
@@ -188,7 +106,7 @@ public class DataParser {
 		response = Start(json, result);
 		if (result.Status ) {
 			try {
-				if ( mode == Task.mobile_login || mode == Task.mobile_register || mode == Task.fb_login || mode == Task.g_login  ) {
+				if ( mode == Task.mobile_login || mode == Task.fb_login || mode == Task.g_login  ) {
 					result.Data = AppUser.getAppUserByJsonObject(response.getJSONObject("data"));
 				} 
 
@@ -201,39 +119,16 @@ public class DataParser {
 		return result;
 	}
 
-	public DataResult SaleNode(String json, Task mode) {
+	public DataResult User(String json, Task mode) {
 		JSONObject response = null;
 		DataResult result = new DataResult();
 		response = Start(json, result);
 		if (result.Status ) {
 			try {
-				if ( mode == Task.add_sale_node || mode == Task.add_sale_node ) {
-					result.Data = SaleNode.getSaleNode(response.getJSONObject("data"));
-				}else if ( mode == Task.list_sale_node || mode == Task.seller_search) {
-					result.Data = SaleNode.getSaleNodeItems(response.getJSONArray("data"));
-				}else if ( mode == Task.delete_sale_node || mode == Task.add_sale_node ) {
-					result.Data = AppUser.getAppUserByJsonObject(response.getJSONObject("data"));
-				}
-			} catch (JSONException e) {
-				result.Status = false;
-				result.msg = "" + e;
-				e.printStackTrace();
-			}
-		}
-		return result;
-	}
-	public DataResult BuyNode(String json, Task mode) {
-		JSONObject response = null;
-		DataResult result = new DataResult();
-		response = Start(json, result);
-		if (result.Status ) {
-			try {
-				if ( mode == Task.add_buy_node || mode == Task.add_buy_node ) {
-					result.Data = BuyNode.getBuyNode(response.getJSONObject("data"));
-				}else if ( mode == Task.list_buy_node || mode == Task.buyer_search) {
-					result.Data = BuyNode.getBuyNodeItems(response.getJSONArray("data"));
-				}else if ( mode == Task.delete_buy_node || mode == Task.add_buy_node ) {
-					result.Data = AppUser.getAppUserByJsonObject(response.getJSONObject("data"));
+				if ( mode == Task.add_user || mode == Task.update_user ) {
+					result.Data = User.getUser(response.getJSONObject("data"));
+				}else if ( mode == Task.user_list ) {
+					result.Data = User.getUsers(response.getJSONArray("data"));
 				}
 			} catch (JSONException e) {
 				result.Status = false;
@@ -244,16 +139,16 @@ public class DataParser {
 		return result;
 	}
 
-	public DataResult CommodityPrice(String json, Task mode) {
+	public DataResult Commodity(String json, Task mode) {
 		JSONObject response = null;
 		DataResult result = new DataResult();
 		response = Start(json, result);
 		if (result.Status ) {
 			try {
-				if ( mode == Task.add_commodity_price || mode == Task.update_commodity_price ) {
-					result.Data = CommodityPrice.getBuyNode(response.getJSONObject("data"));
-				}else if ( mode == Task.list_commodity_price || mode == Task.search_commodity_price) {
-					result.Data = CommodityPrice.getCommodityPrice(response.getJSONArray("data"));
+				if ( mode == Task.add_commodity || mode == Task.update_commodity ) {
+					result.Data = Commodity.getCommodity(response.getJSONObject("data"));
+				}else if ( mode == Task.list_commodity || mode == Task.search_commodity) {
+					result.Data = Commodity.getCommodities(response.getJSONArray("data"));
 				}
 			} catch (JSONException e) {
 				result.Status = false;

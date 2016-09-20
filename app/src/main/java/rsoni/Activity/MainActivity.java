@@ -1,5 +1,6 @@
 package rsoni.Activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -83,13 +84,13 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_user) {
-            // Handle the camera action
+            startActivity(new Intent(this,UsersActivity.class));
         } else if (id == R.id.nav_mandi) {
 
         } else if (id == R.id.nav_commodity) {
 
         } else if (id == R.id.nav_news) {
-
+            startActivity(new Intent(this,NewsActivity.class));
         } else if (id == R.id.nav_share) {
 
         }
